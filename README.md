@@ -15,7 +15,7 @@ instead of storing a password.
 
 ```
 open5gs-core/
-├── open5gs.env                 # ← the only file you normally edit
+├── open5gs.env                 # the only file you normally edit
 ├── install.sh                  # build deps, MongoDB, Open5GS, WebUI, seed subscribers
 ├── start.sh                    # render config, set up ogstun/NAT, launch the NFs
 ├── stop.sh                     # stop everything and undo host changes
@@ -26,25 +26,6 @@ open5gs-core/
 └── templates/
     └── open5gs.yaml.template   # one template for both local and external modes
 ```
-
-### Changes from the earlier version
-
-- **One config template instead of two.** `all_open5gs_local.yaml.template` and
-  `all_open5gs_external.yaml.template` were 97% identical — they differed only in
-  the nine bind addresses that face the radio. They are now a single
-  `templates/open5gs.yaml.template`; `start.sh` fills in loopback or the physical
-  IP per mode. (The merge was verified to reproduce both originals exactly.)
-- **No stored password.** The hardcoded `PASS="bmwlab"` is gone from every
-  script. `sudo` is validated once and kept fresh in the background.
-- **Subscribers come from a counter, not a giant `insertMany`.** See below.
-- **The WebUI admin account is no longer hand-seeded.** The Open5GS WebUI creates
-  `admin` / `1423` itself on first run when the accounts collection is empty.
-- **Shared logic was de-duplicated** into `lib/common.sh` (the network
-  auto-detection used to be copy-pasted across the start and stop scripts).
-- **Files renamed** for clarity: `install_open5gs.sh → install.sh`,
-  `start_open5gs_core.sh → start.sh`, `stop_open5gs.sh → stop.sh`,
-  `restart_open5gs.sh → restart.sh`. The redundant `stop_network_oai5g.sh`
-  wrapper was removed (it only called the stop script).
 
 ---
 
@@ -203,6 +184,7 @@ SIM-specific keys, either set `SIM_*` in the env or use the WebUI.
 ```bash
 screen -ls                 # list running NF sessions
 screen -r amf              # attach to a NF log  (Ctrl-A then D to detach)
+screen -d -r smf
 sudo screen -r upf         # the UPF runs as root, so attach with sudo
 ```
 
