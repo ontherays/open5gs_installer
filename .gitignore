@@ -1,0 +1,11 @@
+# Generated at runtime
+open5gs.yaml
+open5gs_logs/
+
+# Built / fetched during install
+open5gs/
+yaml-0.1.7/
+yaml-0.1.7.tar.gz
+
+# Local overrides (optional convention)
+open5gs.local.env
